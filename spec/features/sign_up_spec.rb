@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'When user enter valid informations', type: :feature do
-  let(:user) { build(:user, name_preference: 'name') }
+  let(:user) { build(:userWithoutNamePreference) }
 
   scenario 'user signs in successfully' do
     visit new_user_registration_path
@@ -15,7 +15,10 @@ describe 'When user enter valid informations', type: :feature do
 
     click_button 'Cadastrar'
 
-    expect(page).to have_text("Olá, #{user.preferred_name}")
+    user_from_db = User.first
+
+    expect(user_from_db.preferred_name).to eq user.social_name
+    expect(page).to have_text("Olá, #{user_from_db.preferred_name}")
   end
 end
 

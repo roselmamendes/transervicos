@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
   validate :age
   validate :name_presence
   has_many :services
+  before_save :set_name_preference
 
   SOCIAL_NAME_PREFERENCE = 'S'
   CIVIL_NAME_PREFERENCE = 'C'
@@ -33,5 +34,9 @@ class User < ActiveRecord::Base
     elsif name_preference == SOCIAL_NAME_PREFERENCE
       return social_name.empty? ? civil_name : social_name
     end
+  end
+
+  def set_name_preference
+    self.name_preference = social_name.blank? ? CIVIL_NAME_PREFERENCE : SOCIAL_NAME_PREFERENCE
   end
 end
